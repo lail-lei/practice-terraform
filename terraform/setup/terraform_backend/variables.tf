@@ -7,7 +7,6 @@ variable "project" {
 variable "region" {
   type        = string
   description = "GCP region"
-  default     = "us-east4"
 }
 # Name of bucket to use for terraform backend states
 variable "bucket" {
@@ -17,5 +16,4 @@ variable "bucket" {
 variable "storage_class" {
   type        = string
   description = "The storage class of the Storage Bucket to create"
-  default     = "REGIONAL"
 }

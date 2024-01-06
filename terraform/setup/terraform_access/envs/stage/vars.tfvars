@@ -2,10 +2,11 @@
 env = "stage"
 
 # GCP project id
-gcp_project = "terraform-practice-410321"
+project_id = "terraform-practice-410321"
+region = "europe-west1"
 
 #GitHub repository path
-gh_repo = "lail-lei/practice-terraform"
+repo = "lail-lei/practice-terraform"
 
 #Github branch
-gh_repo_branch = "dev"
+repo_branch = "dev"
