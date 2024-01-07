@@ -35,7 +35,7 @@ jobs:
       - name: Terraform Init
         shell: bash
         working-directory: ${{env.tf-wrkd}}
-        run: terraform init -backend-config=terraform_backend/${{env.tf-env}}/tf-backend.tfvars
+        run: terraform init -backend-config=terraform_backend/envs/${{env.tf-env}}/tf-backend.tfvars
 
       - name: Terraform Validate
         shell: bash
