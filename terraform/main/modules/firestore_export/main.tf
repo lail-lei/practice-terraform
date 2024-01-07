@@ -1,7 +1,7 @@
 # Bucket for export
 resource "google_storage_bucket" "firestore_export" {
   project                     = var.project_id
-  name                        = var.export_bucket
+  name                        = var.export_db_bucket
   location                    = var.region
   storage_class               = "STANDARD"
   uniform_bucket_level_access = true
@@ -39,9 +39,6 @@ resource "google_cloudfunctions_function" "export_function" {
   name                  = "firestore-export"
   description           = "Initiates an export from firestore (in datastore mode) to a bucket"
   runtime               = "nodejs18"
-  source_archive_bucket = var.export_cf_src_bucket
-  source_archive_object = var.export_cf_src_archive
-  entry_point           = "dbExport"
   timeout               = 30
   max_instances         = 1
   event_trigger {
