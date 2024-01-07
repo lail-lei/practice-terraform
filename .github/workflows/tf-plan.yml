@@ -13,6 +13,9 @@ jobs:
   plan:
     environment: dev
     runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -21,14 +24,13 @@ jobs:
         run: |
          echo 'projects/${{vars.GCP_PROJECT_NUMBER}}/locations/global/workloadIdentityPools/gh-oidc-terraform/providers/gh-oidc-terraform'
          echo 'gh-oidc-terraform@${{vars.GCP_PROJECT_ID}}.iam.gserviceaccount.com'
-        
 
-      # - name: 'Authenticate to Google Cloud'
-      #   id: auth
-      #   uses: 'google-github-actions/auth@v1'
-      #   with:
-      #     workload_identity_provider: 'projects/${{vars.GCP_PROJECT_NUMBER}}/locations/global/workloadIdentityPools/gh-oidc-terraform/providers/gh-oidc-terraform'
-      #     service_account: 'gh-oidc-terraform@${{vars.GCP_PROJECT_ID}}.iam.gserviceaccount.com'
+      - name: 'Authenticate to Google Cloud'
+        id: auth
+        uses: 'google-github-actions/auth@v1'
+        with:
+          workload_identity_provider: 'projects/${{vars.GCP_PROJECT_NUMBER}}/locations/global/workloadIdentityPools/gh-oidc-terraform/providers/gh-oidc-terraform'
+          service_account: 'gh-oidc-terraform@${{vars.GCP_PROJECT_ID}}.iam.gserviceaccount.com'
      
       # - name: Terraform Init
       #   shell: bash
