@@ -7,7 +7,6 @@ on:
         - dev
 env:
     tf-wrkd: './terraform/main/'
-    tf-env: 'stage'
 
 jobs:
   plan:
@@ -35,7 +34,7 @@ jobs:
       - name: Terraform Init
         shell: bash
         working-directory: ${{env.tf-wrkd}}
-        run: terraform init -backend-config=terraform_backend/envs/${{env.tf-env}}/tf-backend.tfvars
+        run: terraform init -backend-config=../setup/terraform_backend/envs/${{vars.ENV}}/tf-backend.tfvars
 
       - name: Terraform Validate
         shell: bash
@@ -47,7 +46,7 @@ jobs:
         shell: bash
         working-directory: ${{env.tf-wrkd}}
         run: |
-            terraform plan -out="${{env.tf-env}}.tfplan" -detailed-exitcode 
+            terraform plan -out="envs/${{vars.ENV}}/plan.tfplan" -detailed-exitcode 
             tf_exitcode=$?
             echo "exitcode=$tf_exitcode" >> $GITHUB_OUTPUT
 
