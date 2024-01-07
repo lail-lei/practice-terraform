@@ -98,7 +98,7 @@ resource "google_project_iam_member" "roles" {
                       "storage.admin", 
                       "storage.objectAdmin", 
                     ] )
-  project = var.project_id
+  project = var.project
   provider = google
   role    = "roles/${each.key}"
   member  = "serviceAccount:${google_service_account.gh-oidc-sa.email}"

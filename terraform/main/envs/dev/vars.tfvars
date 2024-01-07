@@ -1,8 +1,8 @@
 # Environment
-env = "stage"
+env = "dev"
 
 # GCP project id
-project_id = "terraform-practice-410321"
+project_id = "terraform-practice-dev-410516"
 
 # GCP project region
 region = "europe-west1"

@@ -1,6 +1,6 @@
 variable "env" {
   type        = string
-  description = "The environment type (dev, state, prod)"
+  description = "The environment type (dev, stage, prod)"
 }
 variable "project_id" {
   type        = string
