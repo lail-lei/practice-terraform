@@ -32,23 +32,23 @@ jobs:
           workload_identity_provider: 'projects/${{vars.GCP_PROJECT_NUMBER}}/locations/global/workloadIdentityPools/gh-oidc-terraform/providers/gh-oidc-terraform'
           service_account: 'gh-oidc-terraform@${{vars.GCP_PROJECT_ID}}.iam.gserviceaccount.com'
      
-      # - name: Terraform Init
-      #   shell: bash
-      #   working-directory: ${{env.tf-wrkd}}
-      #   run: terraform init -backend-config=terraform_backend/${{env.tf-env}}/tf-backend.tfvars
+      - name: Terraform Init
+        shell: bash
+        working-directory: ${{env.tf-wrkd}}
+        run: terraform init -backend-config=terraform_backend/${{env.tf-env}}/tf-backend.tfvars
 
-      # - name: Terraform Validate
-      #   shell: bash
-      #   working-directory: ${{env.tf-wrkd}}
-      #   run: terraform validate -no-color
+      - name: Terraform Validate
+        shell: bash
+        working-directory: ${{env.tf-wrkd}}
+        run: terraform validate -no-color
 
-      # - name: Terraform Plan
-      #   id: plan
-      #   shell: bash
-      #   working-directory: ${{env.tf-wrkd}}
-      #   run: |
-      #       terraform plan -out="${{env.tf-env}}.tfplan" -detailed-exitcode 
-      #       tf_exitcode=$?
-      #       echo "exitcode=$tf_exitcode" >> $GITHUB_OUTPUT
+      - name: Terraform Plan
+        id: plan
+        shell: bash
+        working-directory: ${{env.tf-wrkd}}
+        run: |
+            terraform plan -out="${{env.tf-env}}.tfplan" -detailed-exitcode 
+            tf_exitcode=$?
+            echo "exitcode=$tf_exitcode" >> $GITHUB_OUTPUT
 
     
