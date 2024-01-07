@@ -21,7 +21,8 @@ provider "google" {
 }
 
 # Used to create original GCS Bucket to store terraform states
-resource "google_storage_bucket" "tf-bucket" {
+module "tf-bucket" {
+  source        = '../../modules/storage_bucket'
   project       = var.project
   name          = var.bucket
   location      = var.region

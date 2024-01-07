@@ -3,6 +3,8 @@ env = "stage"
 
 # GCP project id
 project_id = "terraform-practice-410321"
+
+# GCP project region
 region = "europe-west1"
 
 #GitHub repository path
