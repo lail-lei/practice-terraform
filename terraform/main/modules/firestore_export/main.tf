@@ -1,5 +1,5 @@
 # Bucket for export
-resource "google_storage_bucket" "firestore_export" {
+resource "google_storage_bucket" "export_db_bucket" {
   project                     = var.project
   name                        = var.export_db_bucket
   location                    = var.region

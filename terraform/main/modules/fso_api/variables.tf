@@ -22,3 +22,4 @@ variable "cloud_run_min_scale" {
   description = "Minimum number of api cloud run instances to scale to"
   type        = number
 }
+

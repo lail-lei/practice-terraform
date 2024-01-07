@@ -50,7 +50,6 @@ module "fso_api" {
   source = "./modules/fso_api"
   name                                   = local.fso_api_name
   container_image_path                   = var.container_image_path
-  log_level                              = var.log_level
   project                                = var.project
   region                                 = var.region
   cloud_run_max_scale                    = var.api_cloud_run_max_scale
