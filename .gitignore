@@ -11,3 +11,5 @@
 *.tfplan
 
 master-plan
+
+.DS_STORE

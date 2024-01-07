@@ -1,16 +1,21 @@
-variable "project_id" {
+# GCP project name
+variable "project" {
   type        = string
-  description = "The id of the project to which the Google Storage Bucket belongs."
+  description = "GCP project name"
 }
+# GCP region
 variable "region" {
   type        = string
-  description = "GCP region for the Google Storage Bucket"
+  description = "GCP region"
+  default     = "europe-west1"
 }
+# Name of bucket to use for terraform backend states
 variable "bucket" {
   type        = string
-  description = "The name (id) of the Google Storage Bucket"
+  description = "The name of the Google Storage Bucket to create"
 }
 variable "storage_class" {
   type        = string
-  description = "The storage class of the Storage Bucket"
+  description = "The storage class of the Storage Bucket to create"
+  default     = "STANDARD"
 }
