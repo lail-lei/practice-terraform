@@ -6,7 +6,7 @@ Terraform scripts for the creation of the terraform backend and the configuratio
 
 To setup terraform for each environment, the backend GCS bucket and service account need to be created on each GCP project account (dev/dev/prod). The following steps use the dev account as example:
 
-1. Log into the the project console and activate the cloud shell (top right left icon) OR from your local machine: `gcloud auth login && gcloud config set project terraform-practice-dev-410516`
+1. Log into the the project console and activate the cloud shell (top right left icon) OR from your local machine: `gcloud auth login && gcloud config set project terraform-practice-dev-2`
 2. Confirm terraform is installed: `terraform --version`
 3. Clone this repo: `lail-lei/practice-terraform.git`
 4. Change working directory: `cd ./terraform/setup/terraform_backend`
