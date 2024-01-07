@@ -10,6 +10,7 @@ env:
 
 jobs:
   dev-plan:
+    if: github.ref == 'refs/heads/dev'
     environment: dev
     runs-on: ubuntu-latest
     permissions:
@@ -19,43 +20,43 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      # - name: 'Authenticate to Google Cloud'
-      #   id: auth
-      #   uses: 'google-github-actions/auth@v1'
-      #   with:
-      #     workload_identity_provider: 'projects/${{vars.GCP_PROJECT_NUMBER}}/locations/global/workloadIdentityPools/gh-oidc-terraform/providers/gh-oidc-terraform'
-      #     service_account: 'gh-oidc-terraform@${{vars.GCP_PROJECT_ID}}.iam.gserviceaccount.com'
+      - name: 'Authenticate to Google Cloud'
+        id: auth
+        uses: 'google-github-actions/auth@v1'
+        with:
+          workload_identity_provider: 'projects/${{vars.GCP_PROJECT_NUMBER}}/locations/global/workloadIdentityPools/gh-oidc-terraform/providers/gh-oidc-terraform'
+          service_account: 'gh-oidc-terraform@${{vars.GCP_PROJECT_ID}}.iam.gserviceaccount.com'
 
-      # - name: Setup gcloud CLI
-      #   uses: google-github-actions/setup-gcloud@v1
-      #   with:
-      #     project_id: ${{vars.GCP_PROJECT_ID}}
+      - name: Setup gcloud CLI
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: ${{vars.GCP_PROJECT_ID}}
      
-      # - name: Terraform Init
-      #   shell: bash
-      #   working-directory: ${{env.tf-wrkd}}
-      #   run: terraform init -backend-config=../setup/terraform_backend/envs/${{vars.ENV}}/tf-backend.tfvars
+      - name: Terraform Init
+        shell: bash
+        working-directory: ${{env.tf-wrkd}}
+        run: terraform init -backend-config=../setup/terraform_backend/envs/${{vars.ENV}}/tf-backend.tfvars
 
-      # - name: Terraform Validate
-      #   shell: bash
-      #   working-directory: ${{env.tf-wrkd}}
-      #   run: terraform validate -no-color
+      - name: Terraform Validate
+        shell: bash
+        working-directory: ${{env.tf-wrkd}}
+        run: terraform validate -no-color
 
-      # - name: Terraform Plan
-      #   id: plan
-      #   shell: bash
-      #   working-directory: ${{env.tf-wrkd}}
-      #   run: |
-      #       terraform plan -out="envs/${{vars.ENV}}/plan.tfplan" -detailed-exitcode 
-      #       tf_exitcode=$?
-      #       echo "exitcode=$tf_exitcode" >> $GITHUB_OUTPUT
-      # - name: Save tf plan artifact
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #         name: tf-plan
-      #         path: |
-      #           envs/${{vars.ENV}}/plan.tfplan
-      #           ${{env.tf-wrkd}}.terraform.lock.hcl
-      #           ${{env.tf-wrkd}}*.zip
+      - name: Terraform Plan
+        id: plan
+        shell: bash
+        working-directory: ${{env.tf-wrkd}}
+        run: |
+            terraform plan -out="envs/${{vars.ENV}}/plan.tfplan" -detailed-exitcode 
+            tf_exitcode=$?
+            echo "exitcode=$tf_exitcode" >> $GITHUB_OUTPUT
+      - name: Save tf plan artifact
+        uses: actions/upload-artifact@v3
+        with:
+              name: tf-plan
+              path: |
+                envs/${{vars.ENV}}/plan.tfplan
+                ${{env.tf-wrkd}}.terraform.lock.hcl
+                ${{env.tf-wrkd}}*.zip
 
     
