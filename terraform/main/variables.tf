@@ -2,7 +2,7 @@ variable "env" {
   type        = string
   description = "The environment type (dev, stage, prod)"
 }
-variable "project_id" {
+variable "project" {
   type        = string
   description = "GCP project id"
 }

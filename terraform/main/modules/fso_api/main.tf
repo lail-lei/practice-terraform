@@ -16,7 +16,7 @@ resource "google_service_account" "fso_api" {
 
 resource "google_project_iam_member" "fso_api" {
   count   = length(local.roles)
-  project = var.project_id
+  project = var.project
   role    = local.roles[count.index]
   member  = "serviceAccount:${google_service_account.fso_api.email}"
 }

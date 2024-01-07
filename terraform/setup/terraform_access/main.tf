@@ -14,7 +14,7 @@ terraform {
 }
 
 provider "google" {
-  project = var.project_id
+  project = var.project
   region  = var.region
 }
 
@@ -25,14 +25,14 @@ data "google_project" "project" {}
 # -> example: "google_project_service" "cloudbuild.googleapis.com"
 resource "google_project_service" "service" {
   for_each = toset( ["iam.googleapis.com", "cloudresourcemanager.googleapis.com", "iamcredentials.googleapis.com", "sts.googleapis.com", "serviceusage.googleapis.com", "secretmanager.googleapis.com", "cloudfunctions.googleapis.com", "cloudbuild.googleapis.com"] )
-  project = var.project_id
+  project = var.project
   service = each.key
 }
 
 # GitHub OIDC
 
 resource "google_service_account" "gh-oidc-sa" {
-  project = var.project_id
+  project = var.project
   account_id   = "gh-oidc-terraform"
   display_name = "GiHub Service Account"
 }

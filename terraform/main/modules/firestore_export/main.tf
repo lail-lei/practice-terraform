@@ -1,6 +1,6 @@
 # Bucket for export
 resource "google_storage_bucket" "firestore_export" {
-  project                     = var.project_id
+  project                     = var.project
   name                        = var.export_db_bucket
   location                    = var.region
   storage_class               = "STANDARD"
@@ -23,7 +23,7 @@ resource "google_service_account" "firestore_export" {
 }
 
 resource "google_project_iam_member" "firestore_export" {
-  project = var.project_id
+  project = var.project
   member  = "serviceAccount:${google_service_account.firestore_export.email}"
   role    = "roles/datastore.importExportAdmin"
 }
@@ -61,7 +61,7 @@ resource "google_pubsub_topic" "firestore_export" {
 
 # Create scheduler
 resource "google_cloud_scheduler_job" "export_job" {
-  project     = var.project_id
+  project     = var.project
   region      = var.region
   name        = "Firestore-export-job"
   description = "Daily export of entire firestore database"

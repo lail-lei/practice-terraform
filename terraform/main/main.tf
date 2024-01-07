@@ -14,12 +14,12 @@ terraform {
 }
 
 provider "google" {
-  project = var.project_id
+  project = var.project
   region  = var.region
 }
 
 provider "google-beta" {
-  project = var.project_id
+  project = var.project
   region  = var.region
 }
 
@@ -30,7 +30,7 @@ locals {
 
 # App engine required for firestore and cloud scheduler
 resource "google_app_engine_application" "required_app_engine" {
-  project       = var.project_id
+  project       = var.project
   location_id   = var.app_engine_location
   # enables a Datastore-compatible database
   database_type = "CLOUD_DATASTORE_COMPATIBILITY"
@@ -39,7 +39,7 @@ resource "google_app_engine_application" "required_app_engine" {
 module "firestore_export" {
   source = "./modules/firestore_export"
 
-  project_id            = var.project_id
+  project               = var.project
   region                = var.region
   time_zone             = var.time_zone
   export_db_bucket      = var.export_db_bucket
@@ -51,7 +51,7 @@ module "fso_api" {
   name                                   = local.fso_api_name
   container_image_path                   = var.container_image_path
   log_level                              = var.log_level
-  project_id                             = var.project_id
+  project                                = var.project
   region                                 = var.region
   cloud_run_max_scale                    = var.api_cloud_run_max_scale
   cloud_run_min_scale                    = var.api_cloud_run_min_scale

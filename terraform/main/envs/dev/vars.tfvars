@@ -2,7 +2,7 @@
 env = "dev"
 
 # GCP project id
-project_id = "terraform-practice-dev-2"
+project = "fresh-start-410522"
 
 # GCP project region
 region = "europe-west1"
