@@ -16,13 +16,13 @@ terraform {
 }
 
 provider "google" {
-  project = var.project
+  project = var.project_id
   region  = var.region
 }
 
 # Used to create original GCS Bucket to store terraform states
 resource "google_storage_bucket" "tf-bucket" {
-  project       = var.project
+  project       = var.project_id
   name          = var.bucket
   location      = var.region
   storage_class = var.storage_class
