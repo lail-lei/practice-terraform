@@ -13,7 +13,7 @@ To setup terraform for each environment, the backend GCS bucket and service acco
 5. Temporarily remove backend block from main.tf (likely lines 8-10)
 6. Initiate terraform: `terraform init`
 7. Terraform plan: `terraform plan -var-file="envs/stage/vars.tfvars" -out="envs/stage/plan.tfplan"`
-8. Terraform apply: `terraform apply envs/stage/plan.tfplan`
+8. Terraform apply: `terraform apply "envs/stage/plan.tfplan"`
 9. Terraform output: `terraform output > envs/stage/tf-backend.tfvars`
 10. Now that the backend storage is created, moving forward we need to store the state into the backend bucket that was just created. Add the backend block (removed in step 5) back into main.tf 
 11. Reconfigure terraform to use the backend storage `terraform init -backend-config=envs/stage/tf-backend.tfvars -reconfigure`. When asked "Do you want to copy existing state to the new backend?", answer `yes`
