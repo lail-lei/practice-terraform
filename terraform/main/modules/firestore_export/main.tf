@@ -59,7 +59,7 @@ resource "google_storage_bucket_iam_member" "firestore_export" {
 
 # Create the cloud function
 resource "google_cloudfunctions_function" "export_function" {
-  name                  = "firestore-export"
+  name                  = "firestoreExport"
   description           = "Initiates an export from firestore (in datastore mode) to a bucket"
   runtime               = "nodejs18"
   timeout               = 30
