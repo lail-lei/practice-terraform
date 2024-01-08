@@ -37,7 +37,7 @@ resource "google_storage_bucket" "cf-source-bucket" {
 # Add source code zip to bucket
 resource "google_storage_bucket_object" "cf-object" {
   name   = "source.zip#${data.archive_file.source.output_md5}"
-  bucket = google_storage_bucket.cf-bucket.name
+  bucket = google_storage_bucket.cf-source-bucket.name
   source = data.archive_file.source.output_path
 }
 
@@ -64,7 +64,7 @@ resource "google_cloudfunctions_function" "export_function" {
   runtime               = "nodejs18"
   timeout               = 30
   max_instances         = 1
-  source_archive_bucket = google_storage_bucket.cf-bucket.name
+  source_archive_bucket = google_storage_bucket.cf-source-bucket.name
   source_archive_object = google_storage_bucket_object.cf-object.name
 
   environment_variables = {
