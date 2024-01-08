@@ -1,6 +1,6 @@
 # Compress cloud function source code
 locals {
-  cf_root_dir = "../../../../cloudfunctions/db_export"
+  cf_root_dir = "${path.module}/../../../../cloudfunctions/db_export"
   timestamp   = formatdate("YYMMDDhhmmss", timestamp())
 }
 data "archive_file" "source" {
