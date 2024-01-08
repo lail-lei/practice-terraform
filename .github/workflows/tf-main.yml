@@ -47,11 +47,49 @@ jobs:
         working-directory: ${{env.tf-wrkd}}
         run: terraform plan -var-file="envs/${{vars.ENV}}/vars.tfvars" -out="envs/${{vars.ENV}}/plan.tfplan" 
           
-      # - name: Save tf plan artifact
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #         name: tf-plan
-      #         path: |
-      #           ${{env.tf-wrkd}}/${{vars.ENV}}/plan.tfplan
-      #           ${{env.tf-wrkd}}.terraform.lock.hcl
-      #           ${{env.tf-wrkd}}*.zip
+      - name: Save tf plan artifact
+        uses: actions/upload-artifact@v3
+        with:
+              name: tf-plan
+              path: |
+                ${{env.tf-wrkd}}/${{vars.ENV}}/plan.tfplan
+                ${{env.tf-wrkd}}.terraform.lock.hcl
+                ${{env.tf-wrkd}}*.zip
+
+  dev-apply:
+    needs: dev-plan
+    environment: dev
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Get stored tf plan artifact
+        uses: actions/download-artifact@v3
+        with:
+            name: tf-plan
+            path: "${{env.tf-wrkd}}"
+         
+      - name: 'Authenticate to Google Cloud'
+        id: auth
+        uses: 'google-github-actions/auth@v1'
+        with:
+            workload_identity_provider: 'projects/${{ vars.GCP_PROJECT_NUMBER }}/locations/global/workloadIdentityPools/gh-oicd-terraform/providers/gh-oicd-terraform'
+            service_account: 'gh-oicd-terraform@${{ vars.GCP_PROJECT_ID }}.iam.gserviceaccount.com' 
+        
+      - name: 'Set up Cloud SDK'
+        id: auth-sdk
+        uses: 'google-github-actions/setup-gcloud@v1'
+      
+      - name: Terraform Init
+        shell: bash
+        working-directory: ${{env.tf-wrkd}}
+        run: terraform init -backend-config=../setup/terraform_backend/envs/${{vars.ENV}}/backend.tfbackend
+       
+      - name: Terraform Apply
+        shell: bash
+        working-directory: ${{env.tf-wrkd}}
+        run: terraform apply "envs/${{vars.ENV}}/plan.tfplan"
