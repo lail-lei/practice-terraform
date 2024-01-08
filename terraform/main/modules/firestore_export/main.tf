@@ -70,6 +70,7 @@ resource "google_cloudfunctions_function" "export_function" {
   environment_variables = {
     STORAGE_BUCKET = "gs://${google_storage_bucket.export_db_bucket.name}"
     GCP_PROJECT = var.project
+    LOG_LEVEL = var.log_level
   }
 
   event_trigger {
@@ -81,9 +82,6 @@ resource "google_cloudfunctions_function" "export_function" {
   }
 
   service_account_email = google_service_account.firestore_export.email
-  environment_variables = {
-    LOG_LEVEL = var.log_level
-  }
 }
 
 # Create pub/sub opic to send via scheduler job
