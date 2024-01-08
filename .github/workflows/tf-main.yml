@@ -17,25 +17,31 @@ jobs:
       contents: 'read'
       id-token: 'write'
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+   
       - name: 'Authenticate to Google Cloud'
         id: auth
         uses: 'google-github-actions/auth@v1'
         with:
           workload_identity_provider: 'projects/${{vars.GCP_PROJECT_NUMBER}}/locations/global/workloadIdentityPools/gh-oicd-terraform/providers/gh-oicd-terraform'
           service_account: 'gh-oicd-terraform@${{vars.GCP_PROJECT_ID}}.iam.gserviceaccount.com' 
-      - name: 'Set up Cloud SDK'
-        id: auth-sdk
-        uses: 'google-github-actions/setup-gcloud@v1'
-      - uses: hashicorp/setup-terraform@v2
+      
+      - name: Setup gcloud CLI
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+            project_id: ${{vars.GCP_PROJECT_ID}}
+
       - name: Terraform Init
         shell: bash
         working-directory: ${{env.tf-wrkd}}
         run: terraform init -backend-config=../setup/terraform_backend/envs/${{vars.ENV}}/backend.tfbackend
+      
       - name: Terraform Validate
         shell: bash
         working-directory: ${{env.tf-wrkd}}
         run: terraform validate -no-color
+     
       - name: Terraform Plan
         id: plan
         shell: bash
@@ -44,6 +50,7 @@ jobs:
             terraform plan -var-file="envs/${{vars.ENV}}/vars.tfvars" -out="envs/${{vars.ENV}}/plan.tfplan" -detailed-exitcode 
             tf_exitcode=$?
             echo "exitcode=$tf_exitcode" >> $GITHUB_OUTPUT
+      
       - name: Save tf plan artifact
         uses: actions/upload-artifact@v3
         with:
