@@ -42,7 +42,3 @@ variable "export_retention_days" {
   type        = string
 }
 
-variable "slack_webhook" {
-  type        = string
-  description = "Webhook for sending alerts to slack channel"
-}
