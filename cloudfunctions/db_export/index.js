@@ -3,12 +3,17 @@ const functions = require('firebase-functions');
 const firestore = require('@google-cloud/firestore');
 const { BigQuery } = require('@google-cloud/bigquery');
 const client = new firestore.v1.FirestoreAdminClient();
+
+console.log(process.env)
+
 const Constants = {
   STORAGE_BUCKET: process.env.STORAGE_BUCKET,
   FIREBASE_TABLES: ['Orders', 'CmCustomers'],
   BQ_DATASET_ID: 'firestore_app_data',
-  PROJECT_ID: process.env.GCP_PROJECT
+  PROJECT_ID: process.env.PROJECT
 };
+
+
 
 const threadSleep = (ms) => {
   return new Promise((resolve) => setTimeout(resolve, ms));

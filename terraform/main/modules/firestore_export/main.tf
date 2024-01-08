@@ -69,7 +69,7 @@ resource "google_cloudfunctions_function" "export_function" {
 
   environment_variables = {
     STORAGE_BUCKET = "gs://${google_storage_bucket.export_db_bucket.name}"
-    GCP_PROJECT = var.project
+    PROJECT = var.project
     LOG_LEVEL = var.log_level
   }
 
