@@ -45,16 +45,13 @@ jobs:
         id: plan
         shell: bash
         working-directory: ${{env.tf-wrkd}}
-        run: |
-                terraform plan -var-file="envs/${{vars.ENV}}/vars.tfvars" -out="envs/${{vars.ENV}}/plan.tfplan" -detailed-exitcode 
-                tf_exitcode=$?
-                echo "exitcode=$tf_exitcode" >> $GITHUB_OUTPUT
+        run: terraform plan -var-file="envs/${{vars.ENV}}/vars.tfvars" -out="envs/${{vars.ENV}}/plan.tfplan" 
           
-      - name: Save tf plan artifact
-        uses: actions/upload-artifact@v3
-        with:
-              name: tf-plan
-              path: |
-                ${{env.tf-wrkd}}/${{vars.ENV}}/plan.tfplan
-                ${{env.tf-wrkd}}.terraform.lock.hcl
-                ${{env.tf-wrkd}}*.zip
+      # - name: Save tf plan artifact
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #         name: tf-plan
+      #         path: |
+      #           ${{env.tf-wrkd}}/${{vars.ENV}}/plan.tfplan
+      #           ${{env.tf-wrkd}}.terraform.lock.hcl
+      #           ${{env.tf-wrkd}}*.zip
