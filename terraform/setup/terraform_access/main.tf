@@ -116,6 +116,7 @@ resource "google_project_iam_member" "roles" {
                       "appengine.serviceAdmin",
                       "pubsub.editor",
                       "run.developer",
+                      "cloudfunctions.developer",
                       "cloudscheduler.admin",
                     ] )
   project = var.project
