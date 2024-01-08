@@ -20,11 +20,26 @@ provider "google" {
 
 data "google_project" "project" {}
 
-# Creates a resource for each service in set
+# Enables each api in set
 # The created resource's name is the key value in set 
 # -> example: "google_project_service" "cloudbuild.googleapis.com"
 resource "google_project_service" "service" {
-  for_each = toset( ["iam.googleapis.com", "cloudresourcemanager.googleapis.com", "iamcredentials.googleapis.com", "sts.googleapis.com", "serviceusage.googleapis.com", "secretmanager.googleapis.com", "cloudfunctions.googleapis.com", "cloudbuild.googleapis.com"] )
+  for_each = toset( ["iam.googleapis.com", 
+                     "cloudresourcemanager.googleapis.com", 
+                     "iamcredentials.googleapis.com", 
+                     "sts.googleapis.com", 
+                     "serviceusage.googleapis.com", 
+                     "secretmanager.googleapis.com", 
+                     "cloudfunctions.googleapis.com",
+                     "cloudbuild.googleapis.com", 
+                     "appengine.googleapis.com", 
+                     "run.googleapis.com",
+                     "bigquery.googleapis.com",
+                     "firestore.googleapis.com",           
+                     "logging.googleapis.com",
+                     "monitoring.googleapis.com",
+                     "pubsub.googleapis.com",              
+                    ] )
   project = var.project
   service = each.key
 }
