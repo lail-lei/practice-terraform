@@ -8,7 +8,7 @@ const Constants = {
   STORAGE_BUCKET: process.env.STORAGE_BUCKET,
   FIREBASE_TABLES: ['Orders', 'CmCustomers'],
   BQ_DATASET_ID: 'firestore_app_data',
-  PROJECT_ID: process.env.PROJECT
+  PROJECT_ID: process.env.GCLOUD_PROJECT
 };
 
 const threadSleep = (ms) => {
