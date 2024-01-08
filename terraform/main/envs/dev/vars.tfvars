@@ -17,6 +17,5 @@ api_cloud_run_min_scale = 0
 
 # Firestore export vars
 time_zone = "Europe/Paris"
-export_db_bucket = "db-export-practice-terraform"
 export_retention_days = 90
 

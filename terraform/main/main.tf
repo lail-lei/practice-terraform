@@ -42,7 +42,6 @@ module "firestore_export" {
   project               = var.project
   region                = var.region
   time_zone             = var.time_zone
-  export_db_bucket      = var.export_db_bucket
   export_retention_days = var.export_retention_days
 }
 
