@@ -112,6 +112,9 @@ resource "google_project_iam_member" "roles" {
                       "serviceusage.serviceUsageAdmin", 
                       "storage.admin", 
                       "storage.objectAdmin", 
+                      "appengine.appCreator",
+                      "pubsub.editor",
+                      "run.developer",
                     ] )
   project = var.project
   provider = google
