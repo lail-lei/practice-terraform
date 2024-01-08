@@ -14,7 +14,7 @@ const threadSleep = (ms) => {
   return new Promise((resolve) => setTimeout(resolve, ms));
 };
 
-exports.scheduledFirestoreExport = functions.pubsub
+exports.firestoreExport = functions.pubsub
   .schedule('every day 00:00')
   .onRun((context) => {
     const databaseName = client.databasePath(Constants.PROJECT_ID, '(default)');
