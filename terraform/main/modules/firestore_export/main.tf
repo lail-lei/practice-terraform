@@ -50,7 +50,8 @@ resource "google_service_account" "firestore_export" {
 resource "google_project_iam_member" "roles" {
   for_each = toset( [ 
                       "datastore.importExportAdmin", # for exporting backups
-                      "bigquery.jobUser" # for creating BQ dataset
+                      "bigquery.jobUser", # for creating BQ dataset
+                      "bigquery.dataEditor",
                     ] )
   project = var.project
   provider = google
