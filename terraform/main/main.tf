@@ -41,16 +41,22 @@ module "firestore_export" {
 
   project               = var.project
   region                = var.region
-  time_zone             = var.time_zone
-  export_retention_days = var.export_retention_days
+  time_zone             = var.db_export_time_zone
+  export_retention_days = var.db_export_retention_days
 }
 
 module "fso_api" {
   source = "./modules/fso_api"
   name                                   = local.fso_api_name
-  container_image_path                   = var.container_image_path
+  container_image_path                   = var.api_cloud_run_container_image_path
   project                                = var.project
   region                                 = var.region
   cloud_run_max_scale                    = var.api_cloud_run_max_scale
   cloud_run_min_scale                    = var.api_cloud_run_min_scale
+}
+
+module "bigquery" {
+  source = "./modules/bigquery"
+  app_dataset_id = var.bq_app_dataset_id
+  location = var.bq_location
 }

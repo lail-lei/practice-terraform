@@ -11,11 +11,14 @@ region = "europe-west1"
 app_engine_location = "europe-west"
 
 # Cloud run vars
-container_image_path = "us-docker.pkg.dev/cloudrun/container/hello"
+api_cloud_run_container_image_path = "us-docker.pkg.dev/cloudrun/container/hello"
 api_cloud_run_max_scale = 3
 api_cloud_run_min_scale = 0
 
 # Firestore export vars
-time_zone = "Europe/Paris"
-export_retention_days = 90
+db_export_time_zone = "Europe/Paris"
+db_export_retention_days = 90
 
+# BigQuery vars
+bq_app_dataset_id = "firestore_app_data"
+bq_location = "EU"
