@@ -49,7 +49,10 @@ resource "google_service_account" "firestore_export" {
 resource "google_project_iam_member" "firestore_export" {
   project = var.project
   member  = "serviceAccount:${google_service_account.firestore_export.email}"
-  role    = "roles/datastore.importExportAdmin"
+  role    = [
+              "roles/datastore.importExportAdmin", # for exporting backups
+              "roles/bigquery.jobUser" # for creating BQ dataset
+            ]
 }
 resource "google_storage_bucket_iam_member" "firestore_export" {
   bucket = google_storage_bucket.export_db_bucket.name
@@ -84,7 +87,7 @@ resource "google_cloudfunctions_function" "export_function" {
   service_account_email = google_service_account.firestore_export.email
 }
 
-# Create pub/sub opic to send via scheduler job
+# Create pub/sub topic to send via scheduler job
 resource "google_pubsub_topic" "firestore_export" {
   name = "firestore-export"
 }
