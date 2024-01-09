@@ -118,6 +118,7 @@ resource "google_project_iam_member" "roles" {
                       "run.developer",
                       "cloudfunctions.developer",
                       "cloudscheduler.admin",
+                      "bigquery.dataEditor"
                     ] )
   project = var.project
   provider = google
