@@ -1,5 +1,4 @@
 // Copied pasted from ingka-group-digital/csrs-sfso-backend/chron/firebase-import-export
-const functions = require('firebase-functions');
 const firestore = require('@google-cloud/firestore');
 const { BigQuery } = require('@google-cloud/bigquery');
 const client = new firestore.v1.FirestoreAdminClient();
@@ -15,11 +14,9 @@ const threadSleep = (ms) => {
   return new Promise((resolve) => setTimeout(resolve, ms));
 };
 
-exports.firestoreExport = functions.pubsub
-  .schedule('every day 00:00')
-  .onRun((context) => {
+exports.firestoreExport = () => {
 
-    console.log('executing');
+    console.log('removed pubsub');
     const databaseName = client.databasePath(Constants.PROJECT_ID, '(default)');
 
     return client.exportDocuments({
@@ -96,4 +93,4 @@ exports.firestoreExport = functions.pubsub
         console.error(err);
         throw new Error('Import / Export operation failed');
       });
-  });
+  };
