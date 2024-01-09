@@ -46,17 +46,18 @@ resource "google_service_account" "firestore_export" {
   account_id   = "firestore-export"
   display_name = "Firestore Export"
 }
-resource "google_project_iam_member" "service" {
-  member  = "serviceAccount:${google_service_account.firestore_export.email}"
-  for_each = toset( [
+
+resource "google_project_iam_member" "roles" {
+  for_each = toset( [ 
                       "datastore.importExportAdmin", # for exporting backups
                       "bigquery.jobUser" # for creating BQ dataset
                     ] )
   project = var.project
   provider = google
   role    = "roles/${each.key}"
-  service = each.key
+  member  = "serviceAccount:${google_service_account.firestore_export.email}"
 }
+
 resource "google_storage_bucket_iam_member" "firestore_export" {
   bucket = google_storage_bucket.export_db_bucket.name
   role   = "roles/storage.admin"
