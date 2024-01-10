@@ -46,15 +46,15 @@ module "fso_api" {
 # Creates storage bucket to store cloud function source code
 # Creates storage bucket to store db exports (backups) 
 # Creates cloud scheduler and pub/sub topic to trigger cloud function
-# module "firestore_export" {
-#   source = "./modules/firestore_export"
-#   project               = var.project
-#   region                = var.region
-#   time_zone             = var.db_export_time_zone
-#   export_retention_days = var.db_export_retention_days
-#   db_export_bucket      = var.db_export_bucket
-#   cf_source_bucket      = var.cf_source_bucket
-# }
+module "firestore_export" {
+  source = "./modules/firestore_export"
+  project               = var.project
+  region                = var.region
+  time_zone             = var.db_export_time_zone
+  export_retention_days = var.db_export_retention_days
+  db_export_bucket      = var.db_export_bucket
+  cf_source_bucket      = var.cf_source_bucket
+}
 
 # Creates BigQuery application data dataset 
 module "bigquery" {
