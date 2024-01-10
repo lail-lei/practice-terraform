@@ -8,9 +8,13 @@ terraform {
     }
   }
   required_version = ">=0.14.9"
+  # If setting up new environment, comment out following block until 
+  # a storage bucket has been created
+  # START BLOCK
   backend "gcs" {
     prefix = "terraform-backend"
   }
+  #END BLOCK
 }
 
 provider "google" {
