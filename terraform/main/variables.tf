@@ -29,7 +29,14 @@ variable "api_cloud_run_min_scale" {
   type        = number
 }
 # Firestore export vars
-
+variable "cf_source_bucket" {
+  description = "Name of bucket to store source code for Cloud Functions."
+  type        = string
+}
+variable "db_export_bucket" {
+  description = "Name of bucket to store exports from db"
+  type        = string
+}
 variable "db_export_time_zone" {
   description = "The timezone to use for scheduled events."
   type        = string
@@ -43,7 +50,6 @@ variable "bq_app_dataset_id" {
   description = "BigQuery dataset id for application data"
   type        = string
 }
-
 variable "bq_location" {
   description = "Multi-region location to use for BigQuery"
   type        = string

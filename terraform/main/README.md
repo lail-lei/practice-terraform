@@ -1,6 +1,9 @@
 # Main Infrastructure
 
-Terraform scripts for the creation of project resources and related service accounts.
+Terraform scripts for the creation of project resources and related service accounts. 
+
+These scripts should be run only through GitHub actions! Variables required for workflows to run
+have been set as GitHub environment variables. 
 
 ## Components 
 

@@ -23,11 +23,6 @@ provider "google-beta" {
   region  = var.region
 }
 
-locals {
-  max_cf_instances        = 1
-  fso_api_name          = "fso-api"
-}
-
 # App engine required for firestore and cloud scheduler
 resource "google_app_engine_application" "required_app_engine" {
   project       = var.project
@@ -36,18 +31,9 @@ resource "google_app_engine_application" "required_app_engine" {
   database_type = "CLOUD_DATASTORE_COMPATIBILITY"
 }
 
-module "firestore_export" {
-  source = "./modules/firestore_export"
-
-  project               = var.project
-  region                = var.region
-  time_zone             = var.db_export_time_zone
-  export_retention_days = var.db_export_retention_days
-}
-
 module "fso_api" {
   source = "./modules/fso_api"
-  name                                   = local.fso_api_name
+  service_name                           = "fso-api"
   container_image_path                   = var.api_cloud_run_container_image_path
   project                                = var.project
   region                                 = var.region
@@ -59,4 +45,15 @@ module "bigquery" {
   source = "./modules/bigquery"
   app_dataset_id = var.bq_app_dataset_id
   location = var.bq_location
+}
+
+# Create cloud function
+module "firestore_export" {
+  source = "./modules/firestore_export"
+  project               = var.project
+  region                = var.region
+  time_zone             = var.db_export_time_zone
+  export_retention_days = var.db_export_retention_days
+  db_export_bucket      = var.db_export_bucket
+  cf_source_bucket      = var.cf_source_bucket
 }

@@ -18,6 +18,8 @@ api_cloud_run_min_scale = 0
 # Firestore export vars
 db_export_time_zone = "Europe/Paris"
 db_export_retention_days = 90
+db_export_bucket= "fresh-start-410522-db-export"
+cf_source_bucket= "fresh-start-410522-cloudfunctions-source"
 
 # BigQuery vars
 bq_app_dataset_id = "firestore_app_data"

@@ -1,32 +1,42 @@
 locals {
   roles = [
-    "roles/datastore.user",
-    "roles/secretmanager.secretAccessor",
-    "roles/logging.logWriter"
+    "datastore.user",
+    "secretmanager.secretAccessor",
+    "logging.logWriter"
   ]
 }
 
-# Service account
-resource "google_service_account" "fso_api" {
-  provider = google
-  account_id   = var.name
-  display_name = var.name
-  description  = "fso service account for API"
+# Create artifact registry to upload API images to
+# The api repo's cicd workflows upload images to this registry
+resource "google_artifact_registry_repository" "api-artifact-repo" {
+  location      = var.region
+  repository_id = var.service_name
+  description   = "Docker repo for API"
+  format        = "DOCKER" 
 }
 
+# Create service account for FSO api to use to interact with datastore/logging
+resource "google_service_account" "fso_api" {
+  provider = google
+  account_id   = var.service_name
+  display_name = var.service_name
+  description  = "fso service account for API"
+}
+# Add permissions to above service account
 resource "google_project_iam_member" "fso_api" {
-  count   = length(local.roles)
+  provider = google
+  for_each = toset(local.roles)
   project = var.project
-  role    = local.roles[count.index]
+  role    = "roles/${each.key}"
   member  = "serviceAccount:${google_service_account.fso_api.email}"
 }
 
-# Cloud run
+# Create Cloud Run service
 resource "google_cloud_run_service" "fso_api" {
   provider   = google-beta
   depends_on = [google_project_iam_member.fso_api]
 
-  name                       = var.name
+  name                       = var.service_name
   location                   = var.region
   autogenerate_revision_name = true
 

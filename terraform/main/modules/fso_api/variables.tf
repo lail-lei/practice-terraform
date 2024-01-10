@@ -6,8 +6,8 @@ variable "region" {
   description = "The GCP region."
   type        = string
 }
-variable "name" {
-  description = "Name of the cloud run deployment"
+variable "service_name" {
+  description = "Name of the Cloud Run service"
   type        = string
 }
 variable "container_image_path" {
