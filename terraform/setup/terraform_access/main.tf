@@ -1,3 +1,50 @@
+locals {
+    # APIs that need to be enabled in GCP project
+    required_apis = [
+                      "appengine.googleapis.com", 
+                      "artifactregistry.googleapis.com", 
+                      "bigquery.googleapis.com",
+                      "cloudbuild.googleapis.com", 
+                      "cloudfunctions.googleapis.com",
+                      "cloudresourcemanager.googleapis.com", 
+                      "firestore.googleapis.com",           
+                      "iam.googleapis.com", 
+                      "iamcredentials.googleapis.com", 
+                      "logging.googleapis.com",
+                      "monitoring.googleapis.com",
+                      "pubsub.googleapis.com", 
+                      "run.googleapis.com",
+                      "secretmanager.googleapis.com", 
+                      "serviceusage.googleapis.com", 
+                      "sts.googleapis.com" 
+                    ]
+
+    # Roles required by infrastructure repo to create/update resources in GCP project
+    wif_sa_roles_infra = [
+                          "appengine.appCreator",
+                          "artifactregistry.admin",
+                          "appengine.serviceAdmin", 
+                          "bigquery.dataEditor",
+                          "cloudfunctions.developer",
+                          "cloudscheduler.admin",
+                          "iam.serviceAccountAdmin", 
+                          "iam.serviceAccountUser", 
+                          "iam.workloadIdentityPoolAdmin", 
+                          "pubsub.editor",
+                          "resourcemanager.projectIamAdmin",
+                          "run.developer",
+                          "secretmanager.admin", 
+                          "secretmanager.secretAccessor", 
+                          "secretmanager.secretVersionManager", 
+                          "serviceusage.serviceUsageAdmin", 
+                          "storage.admin", 
+                          "storage.objectAdmin" 
+                        ]
+
+    # Roles required by backend repo to deploy API image to artifact registry in GCP
+    wif_sa_roles_api_cicd = [ "artifactregistry.writer" ]
+}
+
 terraform {
   required_providers {
     google = {
@@ -18,110 +65,40 @@ provider "google" {
   region  = var.region
 }
 
-data "google_project" "project" {}
-
-# Enables each api in set
-# The created resource's name is the key value in set 
-# -> example: "google_project_service" "cloudbuild.googleapis.com"
+# Enables apis in GCP project
 resource "google_project_service" "service" {
-  for_each = toset( ["iam.googleapis.com", 
-                     "cloudresourcemanager.googleapis.com", 
-                     "iamcredentials.googleapis.com", 
-                     "sts.googleapis.com", 
-                     "serviceusage.googleapis.com", 
-                     "secretmanager.googleapis.com", 
-                     "cloudfunctions.googleapis.com",
-                     "cloudbuild.googleapis.com", 
-                     "appengine.googleapis.com", 
-                     "run.googleapis.com",
-                     "bigquery.googleapis.com",
-                     "firestore.googleapis.com",           
-                     "logging.googleapis.com",
-                     "monitoring.googleapis.com",
-                     "pubsub.googleapis.com",              
-                    ] )
+  for_each = toset(local.required_apis)
   project = var.project
   service = each.key
 }
 
 # GitHub OIDC
+# If we need to create separate providers
+# for each repo, google recommends creating two pools
+# 1 pool per provider: https://cloud.google.com/iam/docs/best-practices-for-using-workload-identity-federation#avoid-subject-collisions
 
-resource "google_service_account" "gh-oidc-sa" {
+# Create WIF pool for deploying infrastructure (from infra GitHub repo)
+module wif_infra {
+  source = "./modules/wif"
+  wif_id = "gh-oidc-infra"
+  wif_sa_display_name = "GitHub Service Account - infrastructure deployments"
+  env = var.env
   project = var.project
-  account_id   = "gh-oidc-terraform"
-  display_name = "GiHub Service Account"
+  region = var.region
+  repo = var.repo_infra
+  repo_branch = var.repo_branch_infra
+  wif_sa_roles= toset(local.wif_sa_roles_infra)
 }
 
-# Identities for GitHub Open Id Connect using above service account
-# Allows workflows to deploy to correct project (dev, stage, prod)
-resource "google_iam_workload_identity_pool" "pool" {
-  provider = google
-  workload_identity_pool_id = "gh-oidc-terraform"
-  display_name              = "Github branch ${var.repo_branch}"
-  description               = "Primary OIDC identity pool for GitHub repo ${var.repo} branch ${var.repo_branch}"
-  depends_on = [
-    google_service_account.gh-oidc-sa
-  ]
-}
-
-resource "google_iam_workload_identity_pool_provider" "provider" {
-  provider = google
-  workload_identity_pool_id          = google_iam_workload_identity_pool.pool.workload_identity_pool_id
-  workload_identity_pool_provider_id = "gh-oidc-terraform"
-  display_name                       = "Github branch ${var.repo_branch}"
-  description                        = "Primary OIDC identity pool provider for GitHub repo ${var.repo} branch ${var.repo_branch}"
-  attribute_mapping                  = {
-    "google.subject" = "assertion.sub"
-    "attribute.actor" = "assertion.actor"
-    "attribute.repository" = "assertion.repository"
-    "attribute.repository_owner" = "assertion.repository_owner"
-    "attribute.full" = "assertion.repository+assertion.ref"
-  }
-  attribute_condition = "'${var.repo}refs/heads/${var.repo_branch}' == attribute.full"
-  oidc {
-    issuer_uri        = "https://token.actions.githubusercontent.com"
-  }
-}
-
-# Updates the IAM policy to grant "iam.workloadIdentityUser" role.
-# to the gh-oidc-sa service account. Preserves any other 
-# roles previously granted to the gh-oidc-sa service account
-resource "google_service_account_iam_binding" "sa-account-iam" {
-  provider = google
-  service_account_id = google_service_account.gh-oidc-sa.name
-  role               = "roles/iam.workloadIdentityUser"
-  members = [ 
-    "principalSet://iam.googleapis.com/projects/${data.google_project.project.number}/locations/global/workloadIdentityPools/${google_iam_workload_identity_pool.pool.workload_identity_pool_id}/attribute.full/${var.repo}refs/heads/${var.repo_branch}" 
-  ]
-  depends_on = [
-    google_service_account.gh-oidc-sa,
-    google_iam_workload_identity_pool.pool
-  ]
-}
-
-# Provides permissions to administer allow policies on projects.
-resource "google_project_iam_member" "roles" {
-  for_each = toset( [ 
-                      "iam.serviceAccountAdmin", 
-                      "iam.serviceAccountUser", 
-                      "iam.workloadIdentityPoolAdmin", 
-                      "resourcemanager.projectIamAdmin",
-                      "secretmanager.admin", 
-                      "secretmanager.secretAccessor", 
-                      "secretmanager.secretVersionManager", 
-                      "serviceusage.serviceUsageAdmin", 
-                      "storage.admin", 
-                      "storage.objectAdmin", 
-                      "appengine.appCreator",
-                      "appengine.serviceAdmin",
-                      "pubsub.editor",
-                      "run.developer",
-                      "cloudfunctions.developer",
-                      "cloudscheduler.admin",
-                      "bigquery.dataEditor"
-                    ] )
+# Create WIF pool for deploying api to artificat registry (from backend code GitHub repo)
+module wif_api_cicd {
+  source = "./modules/wif"
+  wif_id = "gh-oidc-api-cicd"
+  wif_sa_display_name = "GitHub Service Account - api deployments"
+  env = var.env
   project = var.project
-  provider = google
-  role    = "roles/${each.key}"
-  member  = "serviceAccount:${google_service_account.gh-oidc-sa.email}"
+  region = var.region
+  repo = var.repo_api
+  repo_branch = var.repo_branch_api
+  wif_sa_roles= toset(local.wif_sa_roles_api_cicd)
 }
