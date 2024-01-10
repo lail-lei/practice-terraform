@@ -24,7 +24,7 @@ jobs:
         id: auth
         uses: 'google-github-actions/auth@v1'
         with:
-          workload_identity_provider: 'projects/${{vars.GCP_PROJECT_NUMBER}}/locations/global/workloadIdentityPools/gh-oidc-terraform/providers/gh-oidc-terraform'
+          workload_identity_provider: 'projects/${{vars.GCP_PROJECT_NUMBER}}/locations/global/workloadIdentityPools/gh-oidc-infra/providers/gh-oidc-infra'
           service_account: 'gh-oidc-infra@${{vars.GCP_PROJECT_ID}}.iam.gserviceaccount.com'
 
       - name: Setup gcloud CLI
