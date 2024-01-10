@@ -24,7 +24,6 @@ resource "google_storage_bucket" "firestore_export" {
   storage_class               = "STANDARD"
   uniform_bucket_level_access = true
   public_access_prevention    = "enforced"
-  force_destroy               = true
 
   lifecycle_rule {
     condition {
