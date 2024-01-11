@@ -17,4 +17,4 @@ repo_branch_infra = "dev"
 repo_api = "lail-lei/terraform-api"
 
 #Github api repository branch
-repo_branch_api = "cte"
+repo_branch_api = "env/cte"
