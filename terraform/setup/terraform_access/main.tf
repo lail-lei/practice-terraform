@@ -19,7 +19,7 @@ locals {
                       "sts.googleapis.com" 
                     ]
 
-    # Roles required by infrastructure repo to create/update resources in GCP project
+    # Roles required by infrastructure repo sa to create/update resources in GCP project
     wif_sa_roles_infra = [
                           "appengine.appCreator",
                           "artifactregistry.admin",
@@ -40,8 +40,13 @@ locals {
                           "storage.objectAdmin" 
                         ]
 
-    # Roles required by backend repo to deploy API image to artifact registry in GCP
-    wif_sa_roles_api_cicd = [ "artifactregistry.writer" ]
+    # Roles required by api repo sa to upload image to docker registry
+    # and deploy the cloud run revision
+    wif_sa_roles_api_cicd = [ 
+                                "artifactregistry.writer", 
+                                "run.developer", 
+                                "iam.serviceAccountUser"
+                            ]
 }
 
 terraform {
