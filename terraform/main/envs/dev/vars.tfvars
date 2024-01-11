@@ -11,7 +11,7 @@ region = "europe-west1"
 app_engine_location = "europe-west"
 
 # Cloud run vars
-api_cloud_run_container_image_path = "us-docker.pkg.dev/cloudrun/container/hello"
+api_cloud_run_container_image_path = "europe-west1-docker.pkg.dev/fresh-start-410522/fso-api/fso-api"
 api_cloud_run_max_scale = 3
 api_cloud_run_min_scale = 0
 
