@@ -27,10 +27,10 @@ jobs:
           workload_identity_provider: 'projects/${{vars.GCP_PROJECT_NUMBER}}/locations/global/workloadIdentityPools/gh-oidc-api-cicd-2/providers/gh-oidc-api-cicd-2'
           service_account: 'gh-oidc-api-cicd-2@${{vars.GCP_PROJECT_ID}}.iam.gserviceaccount.com'
 
-      # - name: Setup gcloud CLI
-      #   uses: google-github-actions/setup-gcloud@v1
-      #   with:
-      #       project_id: ${{vars.GCP_PROJECT_ID}}
+      - name: Setup gcloud CLI
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+            project_id: ${{vars.GCP_PROJECT_ID}}
 
       # - name: Terraform Init
       #   shell: bash
