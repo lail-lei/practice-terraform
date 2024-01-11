@@ -14,15 +14,6 @@ resource "google_service_account" "sa" {
   display_name = var.wif_sa_display_name
 }
 
-# Provides permissions to administer allow policies on projects
-resource "google_project_iam_member" "roles" {
-  for_each = var.wif_sa_roles
-  project = var.project
-  provider = google
-  role    = "roles/${each.key}"
-  member  = "serviceAccount:${google_service_account.sa.email}"
-}
-
 # Identities for GitHub Open Id Connect using above service account
 # Allows workflows to deploy to correct GCP project (dev, stage, prod)
 resource "google_iam_workload_identity_pool" "pool" {
@@ -69,4 +60,13 @@ resource "google_service_account_iam_binding" "sa-account-iam" {
     google_service_account.sa,
     google_iam_workload_identity_pool.pool
   ]
+}
+
+# Provides permissions to administer allow policies on projects
+resource "google_project_iam_member" "roles" {
+  for_each = var.wif_sa_roles
+  project = var.project
+  provider = google
+  role    = "roles/${each.key}"
+  member  = "serviceAccount:${google_service_account.sa.email}"
 }

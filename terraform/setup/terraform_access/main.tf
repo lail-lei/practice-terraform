@@ -29,7 +29,6 @@ locals {
                           "cloudscheduler.admin",
                           "iam.serviceAccountAdmin", 
                           "iam.serviceAccountUser", 
-                          "iam.workloadIdentityPoolAdmin", 
                           "pubsub.editor",
                           "resourcemanager.projectIamAdmin",
                           "run.developer",
@@ -80,7 +79,7 @@ resource "google_project_service" "service" {
 # Create WIF pool for deploying infrastructure (from infra GitHub repo)
 module wif_infra {
   source = "./modules/wif"
-  wif_id = "gh-oidc-infra"
+  wif_id = "gh-oidc-infra-2"
   wif_sa_display_name = "GitHub Service Account - infrastructure deployments"
   env = var.env
   project = var.project
@@ -93,7 +92,7 @@ module wif_infra {
 # Create WIF pool for deploying api to artificat registry (from backend code GitHub repo)
 module wif_api_cicd {
   source = "./modules/wif"
-  wif_id = "gh-oidc-api-cicd"
+  wif_id = "gh-oidc-api-cicd-2"
   wif_sa_display_name = "GitHub Service Account - api deployments"
   env = var.env
   project = var.project
