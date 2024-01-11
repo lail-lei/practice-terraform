@@ -24,31 +24,31 @@ jobs:
         id: auth
         uses: 'google-github-actions/auth@v1'
         with:
-          workload_identity_provider: 'projects/${{vars.GCP_PROJECT_NUMBER}}/locations/global/workloadIdentityPools/gh-oidc-infra-2/providers/gh-oidc-infra-2'
-          service_account: 'gh-oidc-infra-2@${{vars.GCP_PROJECT_ID}}.iam.gserviceaccount.com'
+          workload_identity_provider: 'projects/${{vars.GCP_PROJECT_NUMBER}}/locations/global/workloadIdentityPools/gh-oidc-api-cicd-2/providers/gh-oidc-api-cicd-2'
+          service_account: 'gh-oidc-api-cicd-2@${{vars.GCP_PROJECT_ID}}.iam.gserviceaccount.com'
 
-      - name: Setup gcloud CLI
-        uses: google-github-actions/setup-gcloud@v1
-        with:
-            project_id: ${{vars.GCP_PROJECT_ID}}
+      # - name: Setup gcloud CLI
+      #   uses: google-github-actions/setup-gcloud@v1
+      #   with:
+      #       project_id: ${{vars.GCP_PROJECT_ID}}
 
-      - name: Terraform Init
-        shell: bash
-        working-directory: ${{env.tf-wrkd}}
-        run: terraform init -backend-config=../setup/terraform_backend/envs/${{vars.ENV}}/backend.tfbackend
+      # - name: Terraform Init
+      #   shell: bash
+      #   working-directory: ${{env.tf-wrkd}}
+      #   run: terraform init -backend-config=../setup/terraform_backend/envs/${{vars.ENV}}/backend.tfbackend
           
-      - name: Terraform Validate
-        shell: bash
-        working-directory: ${{env.tf-wrkd}}
-        run: terraform validate -no-color
+      # - name: Terraform Validate
+      #   shell: bash
+      #   working-directory: ${{env.tf-wrkd}}
+      #   run: terraform validate -no-color
          
-      - name: Terraform Plan
-        id: plan
-        shell: bash
-        working-directory: ${{env.tf-wrkd}}
-        run: terraform plan -var-file="envs/${{vars.ENV}}/vars.tfvars" -out="envs/${{vars.ENV}}/plan.tfplan" 
+      # - name: Terraform Plan
+      #   id: plan
+      #   shell: bash
+      #   working-directory: ${{env.tf-wrkd}}
+      #   run: terraform plan -var-file="envs/${{vars.ENV}}/vars.tfvars" -out="envs/${{vars.ENV}}/plan.tfplan" 
   
-      - name: Terraform Apply
-        shell: bash
-        working-directory: ${{env.tf-wrkd}}
-        run: terraform apply "envs/${{vars.ENV}}/plan.tfplan"
+      # - name: Terraform Apply
+      #   shell: bash
+      #   working-directory: ${{env.tf-wrkd}}
+      #   run: terraform apply "envs/${{vars.ENV}}/plan.tfplan"
