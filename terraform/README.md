@@ -11,7 +11,7 @@ We use the following GCP projects:
 - _stage_ - Staging (stage) environment (will connect to C0 frontend)
 - _prod_ - Production (prod) environment (connects to public frontend)
 
-## Repository Overview
+## Directory Overview
 
 - /setup - terraform scripts for the creation of the terraform backend and the configuration of a Workload Identity Federation (WIF) for each environment. Used when setting up terraform for each new environment.  These scripts must be run manually, either in cloud shell or gcloud cli on local machine. 
 - /main - terraform scripts for creation of resources to support FSO API
