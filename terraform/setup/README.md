@@ -1,4 +1,4 @@
-# Setup 
+# Terraform - Setup 
 
 These scripts set up terraform backends and terraform IAM access for a new GCP project/environment. The scripts must
 be run manually, either in cloud shell, or through `gcloud cli` on a local machine. 
