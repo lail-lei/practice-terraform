@@ -5,7 +5,7 @@ These scripts create project resources and service accounts used by project reso
 ## Deployment
 
 These scripts should be run only through GitHub workflows (i.e., should NOT be run via `gcloud cli` or cloud shell).
-For description of standard deployment workflow used in this project, read [here](../.github/workflows/README.md)
+For description of standard deployment workflow used in this project, read [here](../../.github/workflows/README.md)
  
 ## Components 
 - [FSO Cloud Run API](../modules/fso_api/README.md)
