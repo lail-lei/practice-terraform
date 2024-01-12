@@ -7,6 +7,7 @@ locals {
                       "cloudbuild.googleapis.com", 
                       "cloudfunctions.googleapis.com",
                       "cloudresourcemanager.googleapis.com", 
+                      "cloudscheduler.googleapis.com",
                       "firestore.googleapis.com",           
                       "iam.googleapis.com", 
                       "iamcredentials.googleapis.com", 
