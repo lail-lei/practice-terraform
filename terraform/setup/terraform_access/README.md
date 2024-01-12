@@ -5,7 +5,7 @@ These scripts are used to create (or update) IAM access for a GCP project/enviro
 - infrastructure (in which the code you're reading lives, to deploy infrastructure to the GCP project)
 - API (to deploy the cloud run api)
 
-[setup and running instructions relative link] (../../README.md)
+[setup and running instructions](../../README.md)
 
 ### Created GitHub Service Accounts
 
