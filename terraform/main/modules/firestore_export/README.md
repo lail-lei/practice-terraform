@@ -1,8 +1,8 @@
-# Firestore export Cloud Function
+## Firestore export Cloud Function
 
 This module creates the resources necessary for exporting Firestore data for backups and for analytics purposes.
 
-## Resources 
+### Resources 
 
 - Cloud Function
     - Application code uses attached service account to:
@@ -13,7 +13,7 @@ This module creates the resources necessary for exporting Firestore data for bac
 -  Storage bucket to store Cloud Function source code
 -  Cloud Scheduler job and Pub/Sub topic to trigger Cloud Function
 
-## Source Code
+### Source Code
 
 [Source Code](../../../../cloudfunctions/db_export/index.js)
 

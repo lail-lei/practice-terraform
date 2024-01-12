@@ -1,8 +1,8 @@
-# FSO Cloud Run API
+## FSO Cloud Run API
 
 This module creates resources necessary for the FSO API.
 
-## Resources 
+### Resources 
 
 - Cloud Run Revision
     - Application code uses attached service account to:
@@ -11,12 +11,12 @@ This module creates resources necessary for the FSO API.
 
 - Artifact Registry repo to store Docker Images
 
-## Source Code
+### Source Code
 
 GitHub Repository API source code:
 
 
-## Code Deployment 
+### Code Deployment 
 
 API GitHub workflow use the `gh-oidc-api-cicd` service account to:
 - upload a new Docker Image to the `europe-west1-docker.pkg.dev/GCP_PROJECT_ID>/fso-api/fso-api` image path in Artifact Registry 

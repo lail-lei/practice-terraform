@@ -1,6 +1,6 @@
-# Plan and Deploy Workflows
+## Plan and Deploy Workflows
 
-## Branches
+### Branches
 
 There are two long-living branches:
 - dev
@@ -8,7 +8,7 @@ There are two long-living branches:
 
 Both require PRs to push and approvals to merge.
 
-## Environments 
+### Environments 
 
 There is a dedicated GitHub environment for each GCP project/environment:
 
@@ -18,23 +18,23 @@ There is a dedicated GitHub environment for each GCP project/environment:
 
 Prod includes an environment deployment protection rule. 
 
-## Potential PR workflow
+### Potential PR workflow
 
 At some point, we may create a PR workflow that runs `terraform plan` on
 creation of PR to `dev`.
 
-## Main Deploy Workflow 
+### Main Deploy Workflow 
 
 Any push to `dev` or `main` will trigger main workflow.
 
-### Pushes to Dev
+#### Pushes to Dev
 
 Pushes from the dev branch will:
 1. create a plan for the dev project
 2. deploy the planned resources to the dev project
 
 
-### Pushes to Main
+#### Pushes to Main
 
 To help avoid resource drift between stage and prod environments, any push to `main`
 will trigger jobs for both environments. 
