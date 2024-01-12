@@ -1,4 +1,4 @@
-# Create service account for handling exports from firestore db
+# Create service account for handling exports from Firestore db
 resource "google_service_account" "firestore_export" {
   account_id   = "firestore-export"
   display_name = "Firestore Export"
@@ -72,7 +72,7 @@ resource "google_storage_bucket_object" "cf-object" {
 # Create the cloud function
 resource "google_cloudfunctions_function" "export_function" {
   name                  = "firestoreExport"
-  description           = "Initiates an export from firestore (in datastore mode) to a bucket, writes firestore data to bq"
+  description           = "Initiates an export from Firestore (in Datastore mode) to a bucket. Also writes Firestore data to BigQuery dataset"
   runtime               = "nodejs18"
   source_archive_bucket = google_storage_bucket.cf-source-bucket.name
   source_archive_object = google_storage_bucket_object.cf-object.name
@@ -80,7 +80,6 @@ resource "google_cloudfunctions_function" "export_function" {
   max_instances         = 1
 
   environment_variables = {
-    # may be able to replace env variables with pubsub topic data?
     STORAGE_BUCKET = "gs://${google_storage_bucket.firestore_export.name}"
     GCLOUD_PROJECT = var.project
     LOG_LEVEL = var.log_level
@@ -107,12 +106,11 @@ resource "google_cloud_scheduler_job" "export_job" {
   project     = var.project
   region      = var.region
   name        = "Firestore-export-job"
-  description = "Daily export of entire firestore database"
+  description = "Daily export of entire Firestore database"
   schedule    = "0 4 * * *"
   time_zone   = var.time_zone
 
   pubsub_target {
     topic_name = google_pubsub_topic.firestore_export.id
-    data       = base64encode("{\"bucket\": \"gs://${google_storage_bucket.firestore_export.name}\"}")
   }
 }
