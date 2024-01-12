@@ -6,17 +6,17 @@ be run manually, either in cloud shell, or through `gcloud cli` on a local machi
 
 ### Directory overview 
 
-- terraform_backend: Scripts used to 1., create a Google Cloud Storage (GCS) bucket for terraform backend files
+- _terraform_backend_ - Scripts used to 1., create a Google Cloud Storage (GCS) bucket for terraform backend files
 and then 2., to actually store the terraform backend file in the newly-created GCS bucket. 
 
-- terraform_access: Scripts used to create (or update) IAM access for a GCP project/environment. The new GCP project will need to be accessible by two GitHub repositories (via workflows). For each of these repos, a Workload Identity Federation (WIF) pool will be created and granted the roles each repository needs. The repos are: 
+- _terraform_access_ - Scripts used to create (or update) IAM access for a GCP project/environment. The new GCP project will need to be accessible by two GitHub repositories (via workflows). For each of these repos, a Workload Identity Federation (WIF) pool will be created and granted the roles each repository needs. The repos are: 
     - infrastructure (in which the code you're reading lives, to deploy infrastructure to the GCP project)
     - API (to deploy the cloud run api)
 
 ### Created GitHub Service Accounts
 
- - gh-oidc-infra (used by workflows in current repo)
- - gh-oidc-api-cicd (used by workflows in API repo)
+ - _gh-oidc-infra_ - used by workflows in current repo
+ - _gh-oidc-api-cicd_ - used by workflows in API repo
 
 
 ### Manual Setup Instructions For New GCP projects

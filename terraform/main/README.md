@@ -15,8 +15,8 @@ For description of standard deployment workflow used in this project, read [here
 #### Database
 Application data is stored in Firebase (running in Datastore mode).
 There's two collections: 
-- Orders (order and fulfillment-related data, including product ids, order confirmation codes, and shipping address)
-- WebAppUser (basic profile and contact info of users of the web application, for marketing purposes)
+- _Orders_ - order and fulfillment-related data, including product ids, order confirmation codes, and shipping address
+- _WebAppUser_ - basic profile and contact info of users of the web application, for marketing purposes
 
 #### Dataset 
 Application data is exported to a BigQuery dataset called: `firestore_app_data`
