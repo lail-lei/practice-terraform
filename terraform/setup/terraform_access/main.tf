@@ -25,7 +25,7 @@ locals {
                           "appengine.appCreator",
                           "artifactregistry.admin",
                           "appengine.serviceAdmin", 
-                          "bigquery.dataEditor",
+                          "bigquery.admin",
                           "cloudfunctions.developer",
                           "cloudscheduler.admin",
                           "iam.serviceAccountAdmin", 
