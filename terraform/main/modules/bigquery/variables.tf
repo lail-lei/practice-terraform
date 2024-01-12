@@ -1,5 +1,5 @@
 variable "app_dataset_id" {
-  description = "BigQuery dataset id for application data"
+  description = "BigQuery application data dataset id"
   type        = string
 }
 variable "location" {

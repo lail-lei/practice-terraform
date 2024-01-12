@@ -5,7 +5,7 @@ const client = new firestore.v1.FirestoreAdminClient();
 
 const Constants = {
   STORAGE_BUCKET: process.env.STORAGE_BUCKET,
-  FIREBASE_TABLES: ['Orders', 'CmCustomers'],
+  FIREBASE_TABLES: ['Orders', 'WebAppUser'],
   BQ_DATASET_ID: 'firestore_app_data',
   PROJECT_ID: process.env.GCLOUD_PROJECT
 };
@@ -15,8 +15,6 @@ const threadSleep = (ms) => {
 };
 
 exports.firestoreExport = () => {
-
-    console.log('removed pubsub');
     const databaseName = client.databasePath(Constants.PROJECT_ID, '(default)');
 
     return client.exportDocuments({
