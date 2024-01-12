@@ -6,7 +6,7 @@ There are two long-living branches:
 - dev
 - main 
 
-Both require PRs to push and approvals to merge.
+Both require PRs to push, and approvals to merge PRs.
 
 ### Environments 
 

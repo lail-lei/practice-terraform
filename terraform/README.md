@@ -1,5 +1,5 @@
 
-## Infrastructure - Terraform
+## Terraform
 
 FSO infrastructure includes a dedicated terraform backend and IAM access for each environment/GCP project.
 
