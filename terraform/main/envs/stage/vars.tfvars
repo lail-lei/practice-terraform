@@ -18,8 +18,8 @@ api_cloud_run_min_scale = 0
 # Firestore export vars
 db_export_time_zone = "Europe/Paris"
 db_export_retention_days = 90
-db_export_bucket= "terraform-practice-stage-db-export"
-cf_source_bucket= "terraform-practice-stage-cloudfunctions-source"
+db_export_bucket= "terraform-practice-db-export-stage"
+cf_source_bucket= "terraform-practice-cloudfunctions-source-stage"
 
 # BigQuery vars
 bq_app_dataset_id = "firestore_app_data"
