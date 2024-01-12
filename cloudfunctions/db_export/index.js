@@ -15,8 +15,6 @@ const threadSleep = (ms) => {
 };
 
 exports.firestoreExport = () => {
-
-    console.log('removed pubsub');
     const databaseName = client.databasePath(Constants.PROJECT_ID, '(default)');
 
     return client.exportDocuments({
