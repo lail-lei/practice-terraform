@@ -1,10 +1,10 @@
-# Terraform - Setup 
+## Terraform - Setup 
 
 These scripts set up terraform backends and terraform IAM access for a new GCP project/environment. The scripts must
 be run manually, either in cloud shell, or through `gcloud cli` on a local machine. 
 
 
-## Directory overview 
+### Directory overview 
 
 - terraform_backend: Scripts used to 1., create a Google Cloud Storage (GCS) bucket for terraform backend files
 and then 2., to actually store the terraform backend file in the newly-created GCS bucket. 
@@ -19,7 +19,7 @@ and then 2., to actually store the terraform backend file in the newly-created G
  - gh-oidc-api-cicd (used by workflows in API repo)
 
 
-## Manual Setup Instructions For New GCP projects
+### Manual Setup Instructions For New GCP projects
 
 Begin by creating the backend bucket that will store the terraform state. Each environment will have its dedicated backend bucket.
 
