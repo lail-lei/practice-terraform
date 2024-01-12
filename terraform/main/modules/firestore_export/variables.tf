@@ -6,8 +6,12 @@ variable "region" {
   description = "The GCP region, has to match app-engine (e.g. us-central1 for us-central)"
   type        = string
 }
-variable "export_db_bucket" {
-  description = "The name to use for the bucket to keep exported files in"
+variable "cf_source_bucket" {
+  description = "Name of bucket to store source code for Cloud Functions."
+  type        = string
+}
+variable "db_export_bucket" {
+  description = "Name of bucket to store exports from db"
   type        = string
 }
 variable "export_retention_days" {

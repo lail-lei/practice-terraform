@@ -5,11 +5,16 @@ on:
     branches:
     - dev
     - main
+
+concurrency: 
+      group: ${{ github.ref }}
+      cancel-in-progress: true
 env:
-    tf-wrkd: './terraform/main/'
+  tf-wrkd: './terraform/main/'
 
 jobs:
-  dev-plan:
+  dev:
+    if: github.ref == 'refs/heads/dev'
     environment: dev
     runs-on: ubuntu-latest
     permissions:
@@ -19,43 +24,124 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      # - name: 'Authenticate to Google Cloud'
-      #   id: auth
-      #   uses: 'google-github-actions/auth@v1'
-      #   with:
-      #     workload_identity_provider: 'projects/${{vars.GCP_PROJECT_NUMBER}}/locations/global/workloadIdentityPools/gh-oidc-terraform/providers/gh-oidc-terraform'
-      #     service_account: 'gh-oidc-terraform@${{vars.GCP_PROJECT_ID}}.iam.gserviceaccount.com'
+      - name: 'Authenticate to Google Cloud'
+        id: auth
+        uses: 'google-github-actions/auth@v1'
+        with:
+          workload_identity_provider: 'projects/${{vars.GCP_PROJECT_NUMBER}}/locations/global/workloadIdentityPools/gh-oidc-infra-2/providers/gh-oidc-infra-2'
+          service_account: 'gh-oidc-infra-2@${{vars.GCP_PROJECT_ID}}.iam.gserviceaccount.com'
 
-      # - name: Setup gcloud CLI
-      #   uses: google-github-actions/setup-gcloud@v1
-      #   with:
-      #     project_id: ${{vars.GCP_PROJECT_ID}}
-     
-      # - name: Terraform Init
-      #   shell: bash
-      #   working-directory: ${{env.tf-wrkd}}
-      #   run: terraform init -backend-config=../setup/terraform_backend/envs/${{vars.ENV}}/tf-backend.tfvars
+      - name: Setup gcloud CLI
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+            project_id: ${{vars.GCP_PROJECT_ID}}
 
-      # - name: Terraform Validate
-      #   shell: bash
-      #   working-directory: ${{env.tf-wrkd}}
-      #   run: terraform validate -no-color
+      - name: Terraform Init
+        shell: bash
+        working-directory: ${{env.tf-wrkd}}
+        run: terraform init -backend-config=../setup/terraform_backend/envs/${{vars.ENV}}/backend.tfbackend
+          
+      - name: Terraform Validate
+        shell: bash
+        working-directory: ${{env.tf-wrkd}}
+        run: terraform validate -no-color
+         
+      - name: Terraform Plan
+        id: plan
+        shell: bash
+        working-directory: ${{env.tf-wrkd}}
+        run: terraform plan -var-file="envs/${{vars.ENV}}/vars.tfvars" -out="envs/${{vars.ENV}}/plan.tfplan" 
+  
+      - name: Terraform Apply
+        shell: bash
+        working-directory: ${{env.tf-wrkd}}
+        run: terraform apply "envs/${{vars.ENV}}/plan.tfplan"
 
-      # - name: Terraform Plan
-      #   id: plan
-      #   shell: bash
-      #   working-directory: ${{env.tf-wrkd}}
-      #   run: |
-      #       terraform plan -out="envs/${{vars.ENV}}/plan.tfplan" -detailed-exitcode 
-      #       tf_exitcode=$?
-      #       echo "exitcode=$tf_exitcode" >> $GITHUB_OUTPUT
-      # - name: Save tf plan artifact
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #         name: tf-plan
-      #         path: |
-      #           envs/${{vars.ENV}}/plan.tfplan
-      #           ${{env.tf-wrkd}}.terraform.lock.hcl
-      #           ${{env.tf-wrkd}}*.zip
+  stage:
+      if: github.ref == 'refs/heads/main'
+      environment: stage
+      runs-on: ubuntu-latest
+      permissions:
+        contents: 'read'
+        id-token: 'write'
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v3
 
-    
+        - name: 'Authenticate to Google Cloud'
+          id: auth
+          uses: 'google-github-actions/auth@v1'
+          with:
+            workload_identity_provider: 'projects/${{vars.GCP_PROJECT_NUMBER}}/locations/global/workloadIdentityPools/gh-oidc-infra-2/providers/gh-oidc-infra-2'
+            service_account: 'gh-oidc-infra-2@${{vars.GCP_PROJECT_ID}}.iam.gserviceaccount.com'
+
+        - name: Setup gcloud CLI
+          uses: google-github-actions/setup-gcloud@v1
+          with:
+              project_id: ${{vars.GCP_PROJECT_ID}}
+  
+        - name: Terraform Init
+          shell: bash
+          working-directory: ${{env.tf-wrkd}}
+          run: terraform init -backend-config=../setup/terraform_backend/envs/${{vars.ENV}}/backend.tfbackend
+            
+        - name: Terraform Validate
+          shell: bash
+          working-directory: ${{env.tf-wrkd}}
+          run: terraform validate -no-color
+               
+        - name: Terraform Plan
+          id: plan
+          shell: bash
+          working-directory: ${{env.tf-wrkd}}
+          run: terraform plan -var-file="envs/${{vars.ENV}}/vars.tfvars" -out="envs/${{vars.ENV}}/plan.tfplan" 
+        
+        - name: Terraform Apply
+          shell: bash
+          working-directory: ${{env.tf-wrkd}}
+          run: terraform apply "envs/${{vars.ENV}}/plan.tfplan"
+
+  prod:
+    needs: stage
+    if: github.ref == 'refs/heads/main'
+    environment: prod
+    runs-on: ubuntu-latest
+    permissions:
+        contents: 'read'
+        id-token: 'write'
+    steps:
+        - name: Checkout
+          uses: actions/checkout@v3
+
+        - name: 'Authenticate to Google Cloud'
+          id: auth
+          uses: 'google-github-actions/auth@v1'
+          with:
+            workload_identity_provider: 'projects/${{vars.GCP_PROJECT_NUMBER}}/locations/global/workloadIdentityPools/gh-oidc-infra-2/providers/gh-oidc-infra-2'
+            service_account: 'gh-oidc-infra-2@${{vars.GCP_PROJECT_ID}}.iam.gserviceaccount.com'
+      
+        - name: Setup gcloud CLI
+          uses: google-github-actions/setup-gcloud@v1
+          with:
+              project_id: ${{vars.GCP_PROJECT_ID}}
+        
+        - name: Terraform Init
+          shell: bash
+          working-directory: ${{env.tf-wrkd}}
+          run: terraform init -backend-config=../setup/terraform_backend/envs/${{vars.ENV}}/backend.tfbackend
+                  
+        - name: Terraform Validate
+          shell: bash
+          working-directory: ${{env.tf-wrkd}}
+          run: terraform validate -no-color
+                     
+        - name: Terraform Plan
+          id: plan
+          shell: bash
+          working-directory: ${{env.tf-wrkd}}
+          run: terraform plan -var-file="envs/${{vars.ENV}}/vars.tfvars" -out="envs/${{vars.ENV}}/plan.tfplan" 
+              
+        - name: Terraform Apply
+          shell: bash
+          working-directory: ${{env.tf-wrkd}}
+          run: terraform apply "envs/${{vars.ENV}}/plan.tfplan"

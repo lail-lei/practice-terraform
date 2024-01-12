@@ -6,13 +6,17 @@ variable "project" {
   type        = string
   description = "GCP project id"
 }
+variable "region" {
+  description = "The GCP region."
+  type        = string
+}
 # App Engine vars
 variable "app_engine_location" {
   description = "The location (region) of the app-engine infrastructure (e.g. europe-west)."
   type        = string
 }
 # Cloud run vars
-variable "container_image_path" {
+variable "api_cloud_run_container_image_path" {
   description = "The path of the container image to deploy on cloud run."
   type        = string
 }
@@ -25,24 +29,28 @@ variable "api_cloud_run_min_scale" {
   type        = number
 }
 # Firestore export vars
-variable "region" {
-  description = "The GCP region."
+variable "cf_source_bucket" {
+  description = "Name of bucket to store source code for Cloud Functions."
   type        = string
 }
-variable "time_zone" {
+variable "db_export_bucket" {
+  description = "Name of bucket to store exports from db"
+  type        = string
+}
+variable "db_export_time_zone" {
   description = "The timezone to use for scheduled events."
   type        = string
 }
-variable "export_db_bucket" {
-  description = "The name to use for the bucket to keep exported files in"
-  type        = string
-}
-variable "export_retention_days" {
+variable "db_export_retention_days" {
   description = "The number of days to keep the datastore export files (recommendation at least 90)"
   type        = string
 }
-
-variable "slack_webhook" {
+# BigQuery
+variable "bq_app_dataset_id" {
+  description = "BigQuery dataset id for application data"
   type        = string
-  description = "Webhook for sending alerts to slack channel"
+}
+variable "bq_location" {
+  description = "Multi-region location to use for BigQuery"
+  type        = string
 }

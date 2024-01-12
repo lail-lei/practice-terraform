@@ -10,11 +10,19 @@ variable "region" {
   type        = string
   description = "GCP region"
 }
-variable "repo" {
+variable "repo_infra" {
   type        = string
-  description = "GitHub repository path"
+  description = "Path to infrastructure GitHub repository"
 }
-variable "repo_branch" {
+variable "repo_branch_infra" {
   type        = string
-  description = "GitHub repository branch"
+  description = "Branch used by infrastructure GitHub repository for enivronment specified in var.env"
+}
+variable "repo_api" {
+  type        = string
+  description = "Path to api GitHub repository"
+}
+variable "repo_branch_api" {
+  type        = string
+  description = "Branch used by backend code GitHub repository for enivronment specified in var.env"
 }
