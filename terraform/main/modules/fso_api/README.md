@@ -27,6 +27,6 @@ Note: when setting up FSO infrastructure for a new GCP project, we must first us
 
 Once the Cloud Run resource is created, we:
 1. Build and deploy a new image from the API GitHub Repo
-2. In `envs/<ENVIRONMENT>/vars.tfvars`, update `api_cloud_run_container_image_path` to point to the image deployed in step 1.
+2. In `envs/<ENVIRONMENT>/vars.tfvars`, update `api_cloud_run_container_image_path` to point to the image deployed previous step
 
 

@@ -9,7 +9,7 @@ For description of standard deployment workflow used in this project, read [here
  
 ### Components 
 - [FSO Cloud Run API](./modules/fso_api/README.md)
-- [Firestore export cloud function](./modules/fso_api/README.md)
+- [Firestore export cloud function](./modules/firestore_export/README.md)
 
 ### Data
 #### Database
