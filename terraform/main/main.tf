@@ -28,7 +28,7 @@ resource "google_app_engine_application" "required_app_engine" {
   project       = var.project
   location_id   = var.app_engine_location
   # enables a Datastore-compatible database
-  database_type = "CLOUD_DATASTORE_COMPATIBILITY"
+  database_type = "CLOUD_FIRESTORE"
 }
 
 # Create Cloud Run API + service account
