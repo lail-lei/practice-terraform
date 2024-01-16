@@ -6,8 +6,8 @@ locals {
   ]
 }
 
-# Create artifact registry to upload API images to
-# The api repo's cicd workflows upload images to this registry
+# Create an Artifact Registry repo to store API Docker images.
+# Cicd workflows upload Docker images to this repo
 resource "google_artifact_registry_repository" "api-artifact-repo" {
   location      = var.region
   repository_id = var.service_name

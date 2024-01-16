@@ -23,15 +23,16 @@ provider "google-beta" {
   region  = var.region
 }
 
-# App engine required for firestore and cloud scheduler
+# App engine required for Firestore and Cloud Scheduler
 resource "google_app_engine_application" "required_app_engine" {
   project       = var.project
   location_id   = var.app_engine_location
   # enables a Datastore-compatible database
-  database_type = "CLOUD_DATASTORE_COMPATIBILITY"
+  database_type = "CLOUD_FIRESTORE"
 }
 
-# Create Cloud Run API + service account and artifactory registry (used in API repo's deployment workflows)
+# Create Cloud Run API + service account
+# Create Artifact Registry Repo (API Docker Images are stored in Artifact Registry)
 module "fso_api" {
   source = "./modules/fso_api"
   service_name                           = "fso-api"
@@ -42,10 +43,11 @@ module "fso_api" {
   cloud_run_min_scale                    = var.api_cloud_run_min_scale
 }
 
-# Create firestore db export cloud function (for both backups and writing application data to bq for analytics)
-# Creates storage bucket to store cloud function source code
+# Create Firestore db export Cloud Function. This CF 1, invokes Firestore export jobs and stores
+# exported files in a storage bucket, and 2: writes application data to BiqQuery tables for analytics purposes.
+# Creates storage bucket to store Cloud Function source code
 # Creates storage bucket to store db exports (backups) 
-# Creates cloud scheduler and pub/sub topic to trigger cloud function
+# Creates Cloud Scheduler job and Pub/Sub topic to trigger Cloud Function
 module "firestore_export" {
   source = "./modules/firestore_export"
   project               = var.project

@@ -1,23 +1,48 @@
-# Setup 
+## Terraform - Setup 
 
-Terraform scripts for the creation of the terraform backend and the configuration of a Workload Identity Federation (WIF) for each environment. Used when setting up terraform for each new environment. These scripts must be run manually, either in cloud shell or gcloud cli on local machine. 
+These scripts set up terraform backends and terraform IAM access for a new GCP project/environment. The scripts must
+be run manually, either in cloud shell, or through `gcloud cli` on a local machine. 
 
-## Manual Setup Instructions For New Project-id's
 
-To setup terraform for each environment, the backend GCS bucket and service account need to be created on each GCP project account (dev/dev/prod). The following steps use the dev account as example:
+### Directory overview 
 
-1. Log into the the project console and activate the cloud shell (top right left icon) OR from your local machine: `gcloud auth login && gcloud config set project fresh-start-410522`
-2. Confirm terraform is installed: `terraform --version`
-3. Clone this repo: `lail-lei/practice-terraform.git`
-4. Change working directory: `cd ./terraform/setup/terraform_backend`
-5. Temporarily remove backend block from main.tf (commented, lines 11-17)
-6. Initiate terraform: `terraform init`
-7. Terraform plan: `terraform plan -var-file="envs/dev/vars.tfvars" -out="envs/dev/plan.tfplan"`
-8. Terraform apply: `terraform apply envs/dev/plan.tfplan`
-9. Save output to file `terraform output > envs/dev/backend.tfbackend`
-10. Now that the backend storage is created, moving forward we need to store the state into the backend bucket that was just created. Add the backend block (previously removed in step 5) back to main.tf 
-11. Reconfigure terraform to use the backend storage `terraform init -backend-config=envs/dev/backend.tfbackend -reconfigure`. When asked "Do you want to copy existing state to the new backend?", answer `yes`
-12. Now that we have the backend storage configured, let's create the IAM access for terraform to authenticate from github actions. Change working directory: `cd ../terraform_access`
-13. Reconfigure terraform to use the new backend prefix (storage subfolder set in main.tf) `terraform init -backend-config=../terraform_backend/envs/dev/backend.tfbackend -reconfigure`
-14. Terraform plan: `terraform plan -var-file="envs/dev/vars.tfvars" -out="envs/dev/plan.tfplan"`
-15. Terraform apply: `terraform apply envs/dev/plan.tfplan`
+- _terraform_backend_ - Scripts used to 1., create a Google Cloud Storage (GCS) bucket for terraform backend files
+and then 2., to actually store the terraform backend file in the newly-created GCS bucket. 
+
+- _terraform_access_ - Scripts used to create (or update) IAM access for a GCP project/environment. The new GCP project will need to be accessible by two GitHub repositories (via workflows). For each of these repos, a Workload Identity Federation (WIF) pool will be created and granted the roles each repository needs. The repos are: 
+    - infrastructure (in which the code you're reading lives, to deploy infrastructure to the GCP project)
+    - API (to deploy the cloud run api)
+
+### Created GitHub Service Accounts
+
+ - _gh-oidc-infra_ - used by workflows in current repo
+ - _gh-oidc-api-cicd_ - used by workflows in API repo
+
+
+### Manual Setup Instructions For New GCP projects
+
+Begin by creating the backend bucket that will store the terraform state. Each environment will have its dedicated backend bucket.
+
+1. Log into the the project console and activate the cloud shell, OR from your local machine: `gcloud auth login && gcloud config set project <PROJECT_ID>`
+2. Change the working directory: `cd ./terraform/setup/terraform_backend`
+3. Temporarily remove backend block from main.tf (commented, lines 11-17)
+4. Run: `terraform init`
+5. Run: `terraform validate`
+6. Create terraform plan: `terraform plan -var-file="envs/<NEW_ENVIRONMENT>/vars.tfvars" -out="envs/<NEW_ENVIRONMENT>/plan.tfplan"`
+8. Deploy the planned resources: `terraform apply envs/<NEW_ENVIRONMENT>/plan.tfplan`
+9. Create output backend file to be consumed later: `terraform output > envs/<NEW_ENVIRONMENT>/backend.tfbackend`
+10. In main.tf, add back the codeblock previously removed in step 3.
+11. Reconfigure terraform to use the backend storage bucket we just created: `terraform init -backend-config=envs/<NEW_ENVIRONMENT>/backend.tfbackend -reconfigure`. When asked "Do you want to copy existing state to the new backend?", answer `yes`
+
+Now that we have the backend storage configured, let's create the IAM access for terraform to authenticate from GitHub actions:
+
+12. Change working directory: `cd ../terraform_access`
+13. Reconfigure terraform to use the new backend prefix: `terraform init -backend-config=../terraform_backend/envs/<NEW_ENVIRONMENT>/backend.tfbackend -reconfigure`
+14. Run: `terraform validate`
+15. Create terraform plan: `terraform plan -var-file="envs/<NEW_ENVIRONMENT>/vars.tfvars" -out="envs/<NEW_ENVIRONMENT>/plan.tfplan"`
+16. Deploy the planned resources: `terraform apply envs/<NEW_ENVIRONMENT>/plan.tfplan` 
+
+
+After these steps are complete, all changes to project infrastructure must be made via GitHub workflows. 
+To change or update GitHub Service account roles/permissions, make necessary changes to the `wif_sa_roles_`
+arrays in `/terraform_access/main.tf`, and run steps 12-16. 
