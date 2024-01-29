@@ -23,6 +23,11 @@ provider "google-beta" {
   region  = var.region
 }
 
+import {
+  id = var.project
+  to = google_app_engine_application.required_app_engine
+}
+
 # App engine required for Firestore and Cloud Scheduler
 resource "google_app_engine_application" "required_app_engine" {
   project       = var.project
