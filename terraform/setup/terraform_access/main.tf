@@ -22,7 +22,7 @@ locals {
 
     # Roles required by infrastructure repo sa to create/update resources in GCP project
     wif_sa_roles_infra = [
-                          "appengine.appCreator",
+                          "appengine.appAdmin",
                           "artifactregistry.admin",
                           "appengine.serviceAdmin", 
                           "bigquery.admin",
